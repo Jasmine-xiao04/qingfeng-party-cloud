@@ -1,0 +1,260 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleCode {
+  SECRETARY
+  ASSISTANT
+  STUDENT
+}
+
+enum DevelopmentStage {
+  ACTIVIST
+  DEVELOPMENT_OBJECT
+  PROBATIONARY_MEMBER
+  FULL_MEMBER
+}
+
+enum AccountStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum ActivityType {
+  THEORY_STUDY
+  THEME_PARTY_DAY
+  VOLUNTEER_SERVICE
+  BRANCH_MEETING
+  PARTY_CLASS
+  SOCIAL_PRACTICE
+  ORGANIZATION_LIFE
+  OTHER
+}
+
+enum ActivityStatus {
+  NOT_STARTED
+  ONGOING
+  ENDED
+}
+
+enum CheckinStatus {
+  PENDING
+  CHECKED_IN
+  ABSENT
+  LEAVE
+}
+
+enum PointRecordType {
+  ACTIVITY_ADD
+  ACTIVITY_DEDUCT
+  HISTORY_IMPORT
+  ADMIN_ADJUST
+}
+
+enum HonorType {
+  EXCELLENT_MEMBER
+  EXCELLENT_ACTIVIST
+  MODEL_DORMITORY
+  EXCELLENT_STORY
+  VOLUNTEER_STYLE
+  PARTY_PROMOTION
+}
+
+enum HonorStatus {
+  DRAFT
+  PUBLISHED
+  HIDDEN
+}
+
+enum ImportBatchType {
+  ACTIVITY_LIST
+  HISTORY_POINTS
+  MEMBERS
+}
+
+enum ImportBatchStatus {
+  PREVIEWED
+  CONFIRMED
+  ROLLED_BACK
+}
+
+enum ImportMatchStatus {
+  MATCHED
+  NOT_FOUND
+  DUPLICATED_NAME
+  ERROR
+}
+
+model Role {
+  id          String   @id @default(cuid())
+  code        RoleCode @unique
+  name        String
+  description String?
+  users       User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  id              String           @id @default(cuid())
+  name            String
+  studentNo       String?          @unique
+  workNo          String?          @unique
+  phone           String?          @unique
+  email           String?          @unique
+  passwordHash    String
+  roleId          String
+  role            Role             @relation(fields: [roleId], references: [id])
+  developmentStage DevelopmentStage @default(ACTIVIST)
+  batch           String?
+  branch          String?
+  dormitory       String?
+  status          AccountStatus    @default(ACTIVE)
+  publishedActivities Activity[]   @relation("ActivityPublisher")
+  operatedPoints  PointsRecord[]   @relation("PointOperator")
+  pointRecords    PointsRecord[]   @relation("UserPoints")
+  participations  ActivityParticipant[]
+  honors          Honor[]          @relation("HonorPublisher")
+  importBatches   ImportBatch[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([roleId])
+  @@index([developmentStage])
+  @@index([batch])
+  @@index([status])
+}
+
+model Activity {
+  id             String            @id @default(cuid())
+  title          String
+  activityTime   DateTime
+  location       String
+  type           ActivityType
+  description    String?
+  signupLink     String?
+  isRequired     Boolean           @default(false)
+  requiredStages DevelopmentStage[] @default([])
+  allowedStages  DevelopmentStage[] @default([])
+  basePoints     Float             @default(1)
+  status         ActivityStatus    @default(NOT_STARTED)
+  publisherId    String
+  publisher      User              @relation("ActivityPublisher", fields: [publisherId], references: [id])
+  attachmentUrl  String?
+  participants   ActivityParticipant[]
+  pointRecords   PointsRecord[]
+  importBatches  ImportBatch[]
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([activityTime])
+  @@index([type])
+  @@index([isRequired])
+  @@index([publisherId])
+}
+
+model ActivityParticipant {
+  id            String        @id @default(cuid())
+  activityId    String
+  activity      Activity      @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isParticipated Boolean      @default(true)
+  checkinStatus CheckinStatus @default(CHECKED_IN)
+  points        Float         @default(0)
+  remark        String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([activityId, userId])
+  @@index([activityId])
+  @@index([userId])
+}
+
+model PointsRecord {
+  id            String          @id @default(cuid())
+  userId        String
+  user          User            @relation("UserPoints", fields: [userId], references: [id], onDelete: Cascade)
+  activityId    String?
+  activity      Activity?       @relation(fields: [activityId], references: [id], onDelete: SetNull)
+  pointsChange  Float
+  type          PointRecordType
+  remark        String?
+  operatorId    String?
+  operator      User?           @relation("PointOperator", fields: [operatorId], references: [id], onDelete: SetNull)
+  importBatchId String?
+  importBatch   ImportBatch?    @relation(fields: [importBatchId], references: [id], onDelete: SetNull)
+  createdAt     DateTime        @default(now())
+
+  @@index([userId])
+  @@index([activityId])
+  @@index([type])
+  @@index([createdAt])
+  @@index([importBatchId])
+}
+
+model Honor {
+  id              String      @id @default(cuid())
+  title           String
+  type            HonorType
+  coverUrl        String?
+  content         String
+  relatedUserIds  String[]    @default([])
+  relatedDormitory String?
+  publisherId     String
+  publisher       User        @relation("HonorPublisher", fields: [publisherId], references: [id])
+  isPinned        Boolean     @default(false)
+  status          HonorStatus @default(PUBLISHED)
+  publishedAt     DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([type])
+  @@index([status])
+  @@index([isPinned])
+  @@index([publishedAt])
+}
+
+model ImportBatch {
+  id          String            @id @default(cuid())
+  type        ImportBatchType
+  fileName    String
+  status      ImportBatchStatus @default(PREVIEWED)
+  operatorId  String
+  operator    User              @relation(fields: [operatorId], references: [id])
+  activityId  String?
+  activity    Activity?         @relation(fields: [activityId], references: [id], onDelete: SetNull)
+  records     ImportRecord[]
+  points      PointsRecord[]
+  createdAt   DateTime          @default(now())
+  confirmedAt DateTime?
+
+  @@index([type])
+  @@index([status])
+  @@index([operatorId])
+  @@index([activityId])
+}
+
+model ImportRecord {
+  id              String            @id @default(cuid())
+  batchId         String
+  batch           ImportBatch       @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  userId          String?
+  rawName         String?
+  rawStudentNo    String?
+  rawActivityName String?
+  pointsChange    Float?
+  matchStatus     ImportMatchStatus
+  errorReason     String?
+  rawData         Json
+  createdAt       DateTime          @default(now())
+
+  @@index([batchId])
+  @@index([userId])
+  @@index([matchStatus])
+}

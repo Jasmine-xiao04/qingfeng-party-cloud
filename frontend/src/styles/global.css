@@ -1,0 +1,305 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f6f7f9;
+  color: #1f2937;
+}
+
+a {
+  color: inherit;
+}
+
+.center-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.1fr 420px;
+  gap: 48px;
+  align-items: center;
+  padding: 48px clamp(24px, 8vw, 120px);
+  background:
+    linear-gradient(120deg, rgba(180, 35, 24, 0.94), rgba(123, 27, 27, 0.88)),
+    url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1600&q=80");
+  background-size: cover;
+  background-position: center;
+}
+
+.login-copy {
+  max-width: 620px;
+  color: #fff;
+}
+
+.login-copy h1,
+.login-copy .ant-typography {
+  color: #fff;
+}
+
+.login-copy h1 {
+  font-size: clamp(42px, 7vw, 76px);
+  line-height: 1;
+  margin: 20px 0;
+}
+
+.login-copy p {
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+.login-mark {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.login-card {
+  border-radius: 8px;
+  box-shadow: 0 24px 70px rgba(31, 41, 55, 0.24);
+}
+
+.login-tips {
+  margin-top: 18px;
+  color: #667085;
+  line-height: 1.8;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.desktop-sider {
+  background: #fff !important;
+  border-right: 1px solid #e5e7eb;
+}
+
+.brand {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  color: #b42318;
+  font-weight: 800;
+  font-size: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.side-menu {
+  border-inline-end: 0 !important;
+  padding: 12px;
+}
+
+.app-header {
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.header-title {
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.app-content {
+  padding: 24px;
+}
+
+.page-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.page-stack.compact {
+  gap: 12px;
+}
+
+.page-stack h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.muted {
+  color: #667085;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+.form-actions {
+  margin-top: 18px;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.4fr) minmax(160px, 0.8fr) minmax(160px, 0.8fr);
+  gap: 12px;
+}
+
+.upload-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #fff7f6;
+  border: 1px solid #fecdca;
+  border-radius: 8px;
+}
+
+.mt-8 {
+  margin-top: 8px;
+}
+
+.score-number {
+  font-size: 38px;
+  color: #b42318;
+  font-weight: 800;
+  margin-right: 8px;
+}
+
+.honor-card {
+  height: 100%;
+}
+
+.honor-cover {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.honor-cover.placeholder {
+  display: grid;
+  place-items: center;
+  color: #b42318;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff7f6, #fef3f2);
+}
+
+.detail-cover {
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.profile-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #b42318;
+  color: #fff;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.line-clamp {
+  min-height: 48px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.table-link-button {
+  height: auto;
+  padding: 0;
+  white-space: normal;
+  text-align: left;
+  color: #b42318;
+}
+
+.article-content {
+  margin-top: 24px;
+  white-space: pre-wrap;
+  line-height: 1.9;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .login-page {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+
+  .login-copy h1 {
+    font-size: 42px;
+  }
+
+  .desktop-sider {
+    display: none;
+  }
+
+  .mobile-only {
+    display: inline-flex;
+  }
+
+  .app-header {
+    padding: 0 12px;
+  }
+
+  .header-title {
+    display: none;
+  }
+
+  .header-user .muted {
+    display: none;
+  }
+
+  .app-content {
+    padding: 16px;
+  }
+
+  .page-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+}

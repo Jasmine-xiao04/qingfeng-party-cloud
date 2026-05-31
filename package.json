@@ -1,0 +1,53 @@
+{
+  "name": "qingfeng-party-cloud",
+  "version": "0.1.0",
+  "private": true,
+  "description": "青锋党建云 - 面向高校党支部的活动与积分管理平台",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "build": "npm run build -w backend && npm run build -w frontend",
+    "lint": "npm run lint -w frontend",
+    "prisma:generate": "prisma generate && npm exec -w backend prisma generate -- --schema ../prisma/schema.prisma",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "tsx prisma/seed.ts",
+    "db:push": "prisma db push",
+    "seed": "npm run prisma:seed"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^3.0.3",
+    "debug": "^4.4.3",
+    "dotenv": "^16.4.7",
+    "rc-dropdown": "^4.2.1",
+    "rc-menu": "^9.16.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/body-parser": "^1.19.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/http-errors": "^2.0.4",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/ms": "^0.7.34",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.10.2",
+    "@types/qs": "^6.9.17",
+    "@types/range-parser": "^1.2.7",
+    "@types/send": "^0.17.4",
+    "concurrently": "^9.1.0",
+    "nanoid": "^5.1.11",
+    "pg": "^8.21.0",
+    "picocolors": "^1.1.1",
+    "prisma": "^6.1.0",
+    "source-map-js": "^1.2.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}
